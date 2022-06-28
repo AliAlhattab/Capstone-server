@@ -5,7 +5,6 @@ exports.up = function (knex) {
         table.string('name').notNullable();
         table.string('username').notNullable()
         table.string('password').notNullable();
-        table.timestamp('updated_at').defaultTo(knex.fn.now());
       })
   };
   
