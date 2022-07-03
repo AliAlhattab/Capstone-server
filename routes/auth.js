@@ -3,19 +3,31 @@ const router = express.Router();
 const knex = require("knex")(require("../knexfile.js").development);
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const authenticate = require('../middleware/authenticate');
 
 router.post("/signup", (req, res) => {
-  const { first_name, last_name, username, password } = req.body;
+  const { password } = req.body;
   const newPassword = bcrypt.hashSync(password, 10);
   const newUser = {
     ...req.body,
     password: newPassword,
   };
-
   knex("usersinfo")
-    .insert(newUser)
+    .where({ username: req.body.username })
+    .first()
     .then((user) => {
-      res.status(201).send({ success: true, message: "created user" });
+      if (!user) {
+        knex("usersinfo")
+          .insert(newUser)
+          .then((user) => {
+            res.status(201).send({
+              success: true,
+              message: "User has successfully been created",
+            });
+          });
+      } else {
+        return res.status(400).send("Username Already Exists");
+      }
     });
 });
 
@@ -27,7 +39,7 @@ router.post("/login", (req, res) => {
     .then((user) => {
       const isPassword = bcrypt.compareSync(password, user.password);
       if (!isPassword) {
-        return res.status(400).send("invaild password");
+        return res.status(400).send("Invalid Password");
       }
       const token = jwt.sign(
         { id: user.id, username: user.username },
@@ -40,5 +52,18 @@ router.post("/login", (req, res) => {
       });
     });
 });
+
+router.get('/profile', authenticate, (req, res) => {
+
+
+
+  knex('usersinfo')
+  .where({id: req.user.id})
+  .first()
+  .then((user) => {
+   
+    res.json(user);
+  })
+})
 
 module.exports = router;
