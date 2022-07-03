@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 8080;
 const authRoutes = require('./routes/auth');
+const postsRoutes = require('./routes/posts');
 
 app.use(express.json());
 app.use(cors());
@@ -14,6 +15,7 @@ app.get('/', (req, res) => {
   });
 
 app.use('/auth', authRoutes);
+app.use('/posts', postsRoutes);
 
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
