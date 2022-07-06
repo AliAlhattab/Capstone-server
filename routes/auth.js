@@ -53,27 +53,4 @@ router.post("/login", (req, res) => {
     });
 });
 
-router.get('/profile', authenticate, (req, res) => {
-
-  knex('usersinfo')
-  .where({id: req.user.id})
-  .first()
-  .then((user) => {
-   
-    res.json(user);
-  })
-})
-
-
-router.get('/profile/:id', authenticate, (req, res) => {
-
-  knex('usersinfo')
-  .where({id: req.user.id})
-  .first()
-  .then((user) => {
-   
-    res.json(user);
-  })
-})
-
 module.exports = router;
