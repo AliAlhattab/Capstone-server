@@ -8,6 +8,7 @@ router.get("/", (req, res) => {
     .select(
       "posts.id as post_id",
       "posts.content",
+      "posts.website",
       "posts.updated_at",
       "usersinfo.id as user_id",
       "usersinfo.first_name",
@@ -24,12 +25,13 @@ router.get("/", (req, res) => {
 
 router.post('/', (req, res) => {
 
-  const {user_id, content} = req.body;
+  const {user_id, content, website} = req.body;
 
     knex('posts')
     .insert({
         user_id: user_id,
-        content: content
+        content: content,
+        website: website
     })
     .then(postId => {
         res.status(201).json({ newPostId: postId[0] });
@@ -45,6 +47,7 @@ router.get('/:id', (req, res) => {
     .select(
       "posts.id as post_id",
       "posts.content",
+      "posts.website",
       "posts.updated_at",
       "usersinfo.id as user_id",
       "usersinfo.first_name",

@@ -12,6 +12,7 @@ exports.up = function (knex) {
       .createTable('posts', (table) => {
         table.increments('id').primary();
         table.string('user_id').notNullable();
+        table.text('website').notNullable();
         table.text('content').notNullable();
         table.timestamp('updated_at').defaultTo(knex.fn.now());
         table
