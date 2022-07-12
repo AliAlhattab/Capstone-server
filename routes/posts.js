@@ -76,7 +76,26 @@ router.delete('/:id', (req, res) => {
         message: `Error deleting post id ${req.params.id}`
       })
     })
-console.log(id)
+})
+
+router.put('/:id', (req, res) => {
+  const {content, website} = req.body;
+  const { id } = req.params;
+
+  knex('posts')
+  .update({
+    content: content,
+    website: website
+  })
+  .where({id: id})
+  .then(() => {
+    res.status(204).send(`Post with id: ${req.params.id} has been updated`)
+  })
+  .catch(err => {
+    res.status(400).send({
+      message: `Error updating post id ${req.params.id}`
+    })
+  })
 })
 
 module.exports = router;
