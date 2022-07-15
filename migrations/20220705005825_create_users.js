@@ -8,12 +8,16 @@ exports.up = function (knex) {
         table.string('phone').notNullable();
         table.string('username').unique().notNullable()
         table.string('password').notNullable();
+        table.string('about')
+        table.string('github')
+        table.string('linkedin')
       })
       .createTable('posts', (table) => {
         table.increments('id').primary();
         table.string('user_id').notNullable();
         table.text('website').notNullable();
         table.text('content').notNullable();
+        table.text('tech').notNullable();
         table.timestamp('updated_at').defaultTo(knex.fn.now());
         table
           .foreign('user_id')

@@ -26,4 +26,29 @@ router.get('/', authenticate, (req, res) => {
     })
   })
 
+  router.put('/edit/:id', (req, res) => {
+    const {first_name, last_name, email, phone, about, github, linkedin} = req.body;
+    const { id } = req.params;
+  
+    knex('usersinfo')
+    .update({
+   first_name: first_name,
+   last_name: last_name,
+   email: email,
+   phone: phone,
+   about: about,
+   github: github,
+   linkedin: linkedin
+    })
+    .where({id: id})
+    .then(() => {
+      res.status(204).send(`Profile with id: ${req.params.id} has been updated`)
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: `Error updating profile id ${req.params.id}`
+      })
+    })
+  })
+
   module.exports = router;

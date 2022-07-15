@@ -9,6 +9,7 @@ router.get("/", (req, res) => {
       "posts.id as post_id",
       "posts.content",
       "posts.website",
+      'posts.tech',
       "posts.updated_at",
       "usersinfo.id as user_id",
       "usersinfo.first_name",
@@ -25,13 +26,14 @@ router.get("/", (req, res) => {
 
 router.post('/', (req, res) => {
 
-  const {user_id, content, website} = req.body;
+  const {user_id, content, website, tech} = req.body;
 
     knex('posts')
     .insert({
         user_id: user_id,
         content: content,
-        website: website
+        website: website,
+        tech: tech
     })
     .then(postId => {
         res.status(201).json({ newPostId: postId[0] });
@@ -48,6 +50,7 @@ router.get('/:id', (req, res) => {
       "posts.id as post_id",
       "posts.content",
       "posts.website",
+      'posts.tech',
       "posts.updated_at",
       "usersinfo.id as user_id",
       "usersinfo.first_name",
@@ -79,13 +82,14 @@ router.delete('/:id', (req, res) => {
 })
 
 router.put('/:id', (req, res) => {
-  const {content, website} = req.body;
+  const {content, website, tech} = req.body;
   const { id } = req.params;
 
   knex('posts')
   .update({
     content: content,
-    website: website
+    website: website,
+    tech: tech,
   })
   .where({id: id})
   .then(() => {
@@ -96,6 +100,20 @@ router.put('/:id', (req, res) => {
       message: `Error updating post id ${req.params.id}`
     })
   })
+})
+
+router.get('/single/:id', (req, res) => {
+  knex
+    .select(
+      "posts.content",
+      "posts.website",
+      'posts.tech'
+    )
+    .from("posts")
+    .where({'posts.id': req.params.id})
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
 })
 
 module.exports = router;
